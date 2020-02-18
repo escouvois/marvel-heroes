@@ -9,3 +9,4 @@ target/
 scripts/node_modules/
 scripts/.env
 logs
+scripts/package-lock.json
