@@ -15,7 +15,18 @@ async function run() {
     console.log("Index can't be deleted. Error : " + error.message);
   }
 
-  await esClient.indices.create({ index: heroesIndexName })
+  await esClient.indices.create({ index: heroesIndexName });
+
+  await esClient.indices.putMapping({
+    index: heroesIndexName,
+    body: {
+      properties: {
+        "suggest" : {
+          type: 'completion'
+        }
+      }
+    }
+  });
 
   let heroes = [];
   // Read CSV file
@@ -57,7 +68,12 @@ async function run() {
         "durability": data.durability,
         "power": data.power,
         "combat": data.combat,
-        "creators": data.creators
+        "creators": data.creators,
+        "suggest": [
+          { "input": data.name, "weight": 10 },
+          { "input": data.aliases, "weight": 5 },
+          { "input": data.secretIdentities, "weight": 5 }
+        ]
       });
     })
     .on("end", async () => {
