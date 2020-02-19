@@ -39,13 +39,13 @@ public class RedisRepository {
 
     public CompletionStage<List<StatItem>> lastHeroesVisited(int count) {
         logger.info("Retrieved last heroes");
-        return redisClient.connect().async().zrevrange("lastVisited", 0, count)
+        return redisClient.connect().async().zrevrange("lastVisited", 0, count-1)
                 .thenApply(lastHeroesVisited -> lastHeroesVisited.stream().map(StatItem::fromJson).collect(Collectors.toList()));
     }
 
     public CompletionStage<List<TopStatItem>> topHeroesVisited(int count) {
         logger.info("Retrieved tops heroes");
-        return redisClient.connect().async().zrevrangeWithScores("inTops", 0, count)
+        return redisClient.connect().async().zrevrangeWithScores("inTops", 0, count-1)
                 .thenApply(scoredValues -> scoredValues.stream().map(scoredValue ->
                         new TopStatItem(StatItem.fromJson(scoredValue.getValue()), ((long) scoredValue.getScore()))).collect(Collectors.toList()));
     }
