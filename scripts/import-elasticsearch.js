@@ -12,11 +12,12 @@ async function run() {
       index : heroesIndexName
     });
   } catch (error) {
-    console.log("Index can't be deleted. Error : " + error.message);
+    // console.log("Index can't be deleted. Error : " + error.message);
   }
 
   await esClient.indices.create({ index: heroesIndexName });
 
+  try {
   await esClient.indices.putMapping({
     index: heroesIndexName,
     body: {
@@ -27,6 +28,9 @@ async function run() {
       }
     }
   });
+} catch(error) {
+  console.log(error);
+}
 
   let heroes = [];
   // Read CSV file
