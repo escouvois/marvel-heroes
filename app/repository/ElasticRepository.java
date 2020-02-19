@@ -37,11 +37,11 @@ public class ElasticRepository {
                 "    \"query_string\" : {\n" +
                 "      \"query\": \"*" + input + "*\",\n" +
                 "      \"fields\": [\n" +
-                "        \"name.keyword^4\",\n" +
-                "        \"aliases.keyword^3\",\n" +
-                "        \"secretIdentities.keyword^3\", \n" +
-                "        \"description.keyword^2\",\n" +
-                "        \"partners.keyword^1\"\n" +
+                "        \"name^4\",\n" +
+                "        \"aliases^3\",\n" +
+                "        \"secretIdentities^3\", \n" +
+                "        \"description^2\",\n" +
+                "        \"partners^1\"\n" +
                 "        ]\n" +
                 "    }\n" +
                 "  }\n" +
