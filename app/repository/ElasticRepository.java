@@ -35,7 +35,7 @@ public class ElasticRepository {
                 "  \"size\": " + size + ", \n" +
                 "  \"query\": {\n" +
                 "    \"query_string\" : {\n" +
-                "      \"query\": \"*" + input + "*\",\n" +
+                "      \"query\": \"" + (input.isEmpty() ? input + "*" : input + "~") + "\",\n" +
                 "      \"fields\": [\n" +
                 "        \"name^4\",\n" +
                 "        \"aliases^3\",\n" +
