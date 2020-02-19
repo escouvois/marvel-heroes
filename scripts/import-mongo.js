@@ -16,37 +16,43 @@ const insertHeroes = (db, callback) => {
         // Pour chaque ligne on créé un document JSON pour le héros correspondant
         .on('data', data => {
             heroes.push({
-                "id": data.id,
-                "name": data.name,
-                "description": data.description,
-                "imageUrl": data.imageUrl,
-                "backgroundImageUrl": data.backgroundImageUrl,
-                "externalLink": data.externalLink,
-                "secretIdentities": data.secretIdentities,
-                "birthPlace": data.birthPlace,
-                "occupation": data.occupation,
-                "aliases": data.aliases,
-                "alignment": data.alignment,
-                "firstAppearance": data.firstAppearance,
-                "yearAppearance": data.yearAppearance,
-                "universe": data.universe,
-                "gender": data.gender,
-                "race": data.race,
-                "type": data.type,
-                "height": data.height,
-                "weight": data.weight,
-                "eyeColor": data.eyeColor,
-                "hairColor": data.hairColor,
-                "teams": data.teams,
-                "powers": data.powers,
-                "partners": data.partners,
-                "intelligence": data.intelligence,
-                "strength": data.strength,
-                "speed": data.speed,
-                "durability": data.durability,
-                "power": data.power,
-                "combat": data.combat,
-                "creators": data.creators
+                id : data.id,
+                name : data.name,
+                imageUrl : data.imageUrl,
+                backgroundImageUrl : data.backgroundImageUrl,
+                externalLink : data.externalLink,
+                description : data.description,
+                teams : data.teams.split(','),
+                powers : data.powers.split(','),
+                partners : data.partners,
+                creators : data.creators,
+                appearance : {
+                    gender : data.gender,
+                    type : data.type,
+                    race : data["race"],
+                    height : data.height,
+                    weight : data.weight,
+                    eyeColor : data.eyeColor,
+                    hairColor : data.hairColor
+                },
+                identity : {
+                    secretIdentities : data.secretIdentities,
+                    birthPlace : data.birthPlace,
+                    occupation : data.occupation,
+                    aliases : data.aliases,
+                    alignment : data.alignment,
+                    firstAppearance : data.firstAppearance,
+                    yearAppearance : data.yearAppearance,
+                    universe : data.universe
+                },
+                skills : {
+                    intelligence : data.intelligence,
+                    strength : data.strength,
+                    speed : data.speed,
+                    durability : data.durability,
+                    combat : data.combat,
+                    power : data.power
+                }
             });
         })
         // A la fin on créé l'ensemble des acteurs dans MongoDB
