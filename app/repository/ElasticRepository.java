@@ -3,20 +3,15 @@ package repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import env.ElasticConfiguration;
 import env.MarvelHeroesConfiguration;
-import models.Hero;
 import models.PaginatedResults;
 import models.SearchedHero;
 import play.libs.Json;
 import play.libs.ws.WSClient;
-import utils.SearchedHeroSamples;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Spliterator;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -36,7 +31,7 @@ public class ElasticRepository {
 
     public CompletionStage<PaginatedResults<SearchedHero>> searchHeroes(String input, final int size, final int page) {
         String json = "{\n" +
-                "  \"from\": " + size * (page-1) + ",\n" +
+                "  \"from\": " + size * (page - 1) + ",\n" +
                 "  \"size\": " + size + ", \n" +
                 "  \"query\": {\n" +
                 "    \"query_string\" : {\n" +
@@ -82,7 +77,7 @@ public class ElasticRepository {
                     Spliterator<JsonNode> suggestions = response.asJson().get("suggest").get("suggestion").spliterator();
                     return StreamSupport.stream(suggestions, false)
                             .flatMap(suggestion -> StreamSupport.stream(suggestion.get("options").spliterator(), false)
-                                        .map(option -> SearchedHero.fromJson(option.get("_source")))
+                                    .map(option -> SearchedHero.fromJson(option.get("_source")))
                             ).collect(Collectors.toList());
                 });
     }

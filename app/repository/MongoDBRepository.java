@@ -40,14 +40,14 @@ public class MongoDBRepository {
     }
 
     public CompletionStage<List<YearAndUniverseStat>> countByYearAndUniverse() {
-        HashMap id = new HashMap() {{
+        Map id = new HashMap<String, String>() {{
             put("yearAppearance", "$identity.yearAppearance");
             put("universe", "$identity.universe");
         }};
-        HashMap yearAppearance = new HashMap() {{
+        Map yearAppearance = new HashMap<String, String>() {{
             put("yearAppearance", "$_id.yearAppearance");
         }};
-        HashMap push = new HashMap() {{
+        Map push = new HashMap<String, String>() {{
             put("universe", "$_id.universe");
             put("count", "$count");
         }};
@@ -81,7 +81,7 @@ public class MongoDBRepository {
                 Aggregates.match(Filters.ne("powers", "")),
                 Aggregates.group("$powers", Accumulators.sum("count", 1)),
                 Aggregates.sort(Sorts.descending("count")),
-                Aggregates.limit(5)
+                Aggregates.limit(top)
         );
         return ReactiveStreamsUtils.fromMultiPublisher(heroesCollection.aggregate(pipeline))
                 .thenApply(documents -> documents.stream()
