@@ -63,7 +63,6 @@ public class MongoDBRepository {
         //        });
     }
 
-
     public CompletionStage<List<ItemCount>> topPowers(int top) {
         List<Bson> pipeline = Arrays.asList(
                 Aggregates.unwind("$powers"),
@@ -81,19 +80,17 @@ public class MongoDBRepository {
     }
 
     public CompletionStage<List<ItemCount>> byUniverse() {
-        return CompletableFuture.completedFuture(new ArrayList<>());
-        // TODO
-        // List<Document> pipeline = new ArrayList<>();
-        // return ReactiveStreamsUtils.fromMultiPublisher(heroesCollection.aggregate(pipeline))
-        //         .thenApply(documents -> {
-        //             return documents.stream()
-        //                     .map(Document::toJson)
-        //                     .map(Json::parse)
-        //                     .map(jsonNode -> {
-        //                         return new ItemCount(jsonNode.findPath("_id").asText(), jsonNode.findPath("count").asInt());
-        //                     })
-        //                     .collect(Collectors.toList());
-        //         });
+         List<Bson> pipeline = Arrays.asList(
+                 Aggregates.match(Filters.ne("identity.universe", "")),
+                 Aggregates.group("$identity.universe", Accumulators.sum("count", 1)),
+                 Aggregates.sort(Sorts.descending("count"))
+         );
+         return ReactiveStreamsUtils.fromMultiPublisher(heroesCollection.aggregate(pipeline))
+                 .thenApply(documents -> documents.stream()
+                         .map(Document::toJson)
+                         .map(Json::parse)
+                         .map(jsonNode -> new ItemCount(jsonNode.findPath("_id").asText(), jsonNode.findPath("count").asInt()))
+                         .collect(Collectors.toList()));
     }
 
 }
